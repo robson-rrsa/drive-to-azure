@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Drive → Azure</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <h1>Migrador Drive → Azure Blob</h1>
+
+        <div class="buttons">
+            <button id="src">Listar Drive</button>
+            <button id="dst">Listar Azure</button>
+            <button id="mig">Migrar</button>
+            <button id="clear">Limpar Log</button>
+        </div>
+
+        <pre id="log"></pre>
+
+    </div>
+
+    <script>
+        const logArea = document.getElementById('log');
+        const log = msg => logArea.textContent += msg + "\n";
+
+        document.getElementById('src').onclick = async () => {
+            log("Listando arquivos do Drive...");
+            const data = await fetch("/list-source").then(r => r.json());
+            log(JSON.stringify(data, null, 2));
+        };
+
+        document.getElementById('dst').onclick = async () => {
+            log("Listando blobs do Azure...");
+            const data = await fetch("/list-dest").then(r => r.json());
+            log(JSON.stringify(data, null, 2));
+        };
+
+        document.getElementById('mig').onclick = async () => {
+            log("Migrando arquivos...");
+            const data = await fetch("/migrate", { method: "POST" }).then(r => r.json());
+            log(JSON.stringify(data, null, 2));
+        };
+
+        document.getElementById('clear').onclick = () => logArea.textContent = "";
+    </script>
+</body>
+
+
+</html>
